@@ -8,7 +8,9 @@ services:
       - ./src:/usr/src/app/src
     depends_on:
       - main_db
-    command: "npm run dev"
+    command: "npm run start:dev"
+    networks:
+      - main-network
   main_db:
     build: ./main-db
     image: postgres:15
@@ -21,3 +23,8 @@ services:
       POSTGRES_DB: main-db
     volumes:
       - ./tmp/pgdata/main:/var/lib/postgresql/data
+    networks:
+      - main-network
+networks:
+  main-network:
+    external: true

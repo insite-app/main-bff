@@ -12,4 +12,4 @@ RUN npm install --development
 COPY . .
 
 EXPOSE 8080
-CMD ["node", "server.js"]
+CMD ["node", "dist/main.js"]

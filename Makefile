@@ -2,7 +2,7 @@ DOCKER_USERNAME ?= astradzhao
 APPLICATION_NAME ?= main-bff
  
 build:
-			docker build --tag ${DOCKER_USERNAME}/${APPLICATION_NAME} .
+			docker build --tag ${DOCKER_USERNAME}/${APPLICATION_NAME} . --no-cache
 
 push:
 			docker push ${DOCKER_USERNAME}/${APPLICATION_NAME}
