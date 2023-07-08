@@ -2,8 +2,11 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('students')
 export class Student {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  readonly id: string;
+
+  @Column()
+  username: string;
 
   @Column()
   name: string;
@@ -15,5 +18,8 @@ export class Student {
   phone: string;
 
   @Column()
-  created_at: Date;
+  readonly created_at: Date;
+
+  @Column()
+  updated_at: Date;
 }
