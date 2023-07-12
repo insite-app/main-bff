@@ -18,3 +18,12 @@ dev:
 
 start:
 			docker-compose up --build -d
+
+clean:
+			docker-compose down --volumes --remove-orphans
+			rm -rf tmp/pgdata/main/*
+
+rebuild:
+			rm -rf tmp/pgdata/main/*
+			docker-compose down --volumes --remove-orphans
+			docker-compose up --build -d

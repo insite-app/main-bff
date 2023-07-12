@@ -2,20 +2,14 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './database.module';
-import { StudentModule } from './modules/students/student-data.module';
+import { UserDataModule } from './modules/users/user-data.module';
 import { ConfigModule } from '@nestjs/config';
-import { StudentAuthModule } from './auth/student-auth/student-auth.module';
-import { AuthService } from './auth/auth.service';
-import { StudentAuthController } from './auth/student-auth/student-auth.controller';
+import { AuthModule } from './auth/auth.module';
+import { AuthController } from './auth/auth.controller';
 
 @Module({
-  imports: [
-    DatabaseModule,
-    StudentModule,
-    ConfigModule.forRoot(),
-    StudentAuthModule,
-  ],
-  controllers: [AppController, StudentAuthController],
-  providers: [AppService, AuthService],
+  imports: [DatabaseModule, AuthModule, UserDataModule, ConfigModule.forRoot()],
+  controllers: [AppController, AuthController],
+  providers: [AppService],
 })
 export class AppModule {}
