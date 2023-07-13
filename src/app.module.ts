@@ -6,9 +6,16 @@ import { UserDataModule } from './modules/users/user-data.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { AuthController } from './auth/auth.controller';
+import { SearchModule } from './modules/search/search.module';
 
 @Module({
-  imports: [DatabaseModule, AuthModule, UserDataModule, ConfigModule.forRoot()],
+  imports: [
+    DatabaseModule,
+    AuthModule,
+    SearchModule,
+    UserDataModule,
+    ConfigModule.forRoot(),
+  ],
   controllers: [AppController, AuthController],
   providers: [AppService],
 })
