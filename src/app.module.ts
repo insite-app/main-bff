@@ -3,9 +3,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './database.module';
 import { UserDataModule } from './modules/users/user-data.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
-import { AuthController } from './auth/auth.controller';
 import { SearchModule } from './modules/search/search.module';
 
 @Module({
@@ -16,7 +15,7 @@ import { SearchModule } from './modules/search/search.module';
     UserDataModule,
     ConfigModule.forRoot(),
   ],
-  controllers: [AppController, AuthController],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}

@@ -71,10 +71,15 @@ export class AuthService {
   }
 
   async getUser(user: any) {
-    const userInfo = await this.userDataService.findById(user.id);
-    return {
-      ...user,
-      ...userInfo,
-    };
+    try {
+      const userInfo = await this.userDataService.findById(user.id);
+      return {
+        ...user,
+        ...userInfo,
+      };
+    } catch (error) {
+      this.logger.error(error);
+      throw error;
+    }
   }
 }

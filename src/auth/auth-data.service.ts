@@ -26,10 +26,8 @@ export class AuthDataService {
     try {
       const { password, ...rest } = createUserDto;
 
-      // Hash the password
       const passwordHash = await bcrypt.hash(password, 10);
 
-      // Create the user authentication record with the hashed password
       const userAuth = await this.userAuthRepository.save({
         password_hash: passwordHash,
         ...rest,

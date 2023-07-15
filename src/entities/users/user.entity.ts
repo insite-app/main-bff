@@ -17,7 +17,7 @@ export class User {
     nullable: false,
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'id' }) // Specify the column name here
+  @JoinColumn({ name: 'id' })
   userAuth: UserAuth;
 
   @Column({ nullable: true })
@@ -34,6 +34,9 @@ export class User {
 
   @Column({ nullable: true })
   bio: string;
+
+  @Column({ nullable: true })
+  avatar: string;
 
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   readonly created_at: Date;

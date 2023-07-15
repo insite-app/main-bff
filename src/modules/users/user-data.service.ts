@@ -6,6 +6,7 @@ import { MainLoggerService } from 'src/utils/main-logger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserAuth } from 'src/entities/auth/user-auth.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateAvatarDto } from './dto/update-avatar.dto';
 
 @Injectable()
 export class UserDataService {
@@ -22,10 +23,11 @@ export class UserDataService {
       return this.userRepository.find();
     } catch (error) {
       this.logger.error(error);
+      throw error;
     }
   }
 
-  async findAllWithUsername(): Promise<User[]> {
+  async findAllIncludingUsername(): Promise<User[]> {
     try {
       return this.userRepository
         .createQueryBuilder('user')
@@ -33,6 +35,7 @@ export class UserDataService {
         .getMany();
     } catch (error) {
       this.logger.error(error);
+      throw error;
     }
   }
 
@@ -42,6 +45,7 @@ export class UserDataService {
       return user.role;
     } catch (error) {
       this.logger.error(error);
+      throw error;
     }
   }
 
@@ -50,6 +54,7 @@ export class UserDataService {
       return this.userRepository.findOne({ where: { id } });
     } catch (error) {
       this.logger.error(error);
+      throw error;
     }
   }
 
@@ -62,6 +67,7 @@ export class UserDataService {
         .getOne();
     } catch (error) {
       this.logger.error(error);
+      throw error;
     }
   }
 
@@ -88,11 +94,39 @@ export class UserDataService {
     return this.userRepository.save(user);
   }
 
-  async delete(id: number): Promise<void> {
+  async saveAvatar(
+    id: string,
+    updateAvatarDto: UpdateAvatarDto,
+  ): Promise<User> {
+    let user = await this.findById(id);
+    if (!user) {
+      throw new Error('User not found');
+    }
+    user = Object.assign(user, updateAvatarDto);
+    return this.userRepository.save(user);
+  }
+
+  async getAvatarByUsername(username: string): Promise<any> {
+    try {
+      const user = await this.userRepository
+        .createQueryBuilder('user')
+        .select('user.avatar')
+        .leftJoin('user.userAuth', 'userAuth')
+        .where('userAuth.username = :username', { username })
+        .getOne();
+      return user.avatar;
+    } catch (error) {
+      this.logger.error(error);
+      throw error;
+    }
+  }
+
+  async delete(id: string): Promise<void> {
     try {
       await this.userRepository.delete(id);
     } catch (error) {
       this.logger.error(error);
+      throw error;
     }
   }
 }

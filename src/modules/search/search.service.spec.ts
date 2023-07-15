@@ -1,18 +1,49 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { SearchService } from './search.service';
+import { User } from 'src/entities/users/user.entity';
+import { Repository } from 'typeorm';
+import { MockProxy, mock } from 'jest-mock-extended';
+import { MainLoggerService } from 'src/utils/main-logger';
 
 describe('SearchService', () => {
   let service: SearchService;
+  let mockUserRepository: MockProxy<Repository<User>>;
+  let mockLogger: MockProxy<MainLoggerService>;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [SearchService],
-    }).compile();
+  beforeAll(async () => {
+    mockUserRepository = mock<Repository<User>>({
+      createQueryBuilder: jest.fn(),
+    });
 
-    service = module.get<SearchService>(SearchService);
+    mockLogger = mock<MainLoggerService>({
+      error: jest.fn(),
+    });
+
+    service = new SearchService(mockUserRepository, mockLogger);
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('#paginateByUser', () => {
+    it('should paginate by user', async () => {
+      await service.paginateByUser('test', {
+        page: 1,
+        limit: 10,
+      });
+
+      expect(mockUserRepository.createQueryBuilder).toBeCalledTimes(1);
+    });
+  });
+
+  describe('#paginateByOrganization', () => {
+    it('should paginate by organization', async () => {
+      await service.paginateByOrganization('test', {
+        page: 1,
+        limit: 10,
+      });
+
+      expect(mockUserRepository.createQueryBuilder).toBeCalledTimes(1);
+    });
   });
 });
