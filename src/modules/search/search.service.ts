@@ -2,12 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/users/user.entity';
 import { Repository } from 'typeorm';
+import { MainLoggerService } from 'src/utils/main-logger';
 
 @Injectable()
 export class SearchService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly logger: MainLoggerService,
   ) {}
 
   async paginateByUser(
@@ -30,7 +32,7 @@ export class SearchService {
         .getManyAndCount();
       return { data, total };
     } catch (error) {
-      console.log(error);
+      this.logger.error(error);
     }
   }
 
@@ -49,7 +51,7 @@ export class SearchService {
         .getManyAndCount();
       return { data, total };
     } catch (error) {
-      console.log(error);
+      this.logger.error(error);
     }
   }
 }

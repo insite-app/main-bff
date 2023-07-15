@@ -37,4 +37,13 @@ export class UpdateUserDto {
   @IsString()
   @IsOptional()
   phone?: string;
+
+  @ApiProperty({
+    example: 'John Doe is a software engineer',
+    description: 'The bio of the user',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  bio?: string;
 }
