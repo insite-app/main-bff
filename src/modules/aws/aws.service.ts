@@ -4,6 +4,7 @@ import {
   PutObjectCommand,
   S3Client,
   GetObjectCommand,
+  DeleteObjectCommand,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { MainLoggerService } from 'src/utils/main-logger';
@@ -33,6 +34,19 @@ export class AwsService {
         }),
       );
       this.logger.log(`File ${fileName} uploaded successfully`);
+    } catch (err) {
+      this.logger.error(err);
+    }
+  }
+
+  async deleteFile(fileName: string) {
+    try {
+      const params = {
+        Bucket: this.configService.getOrThrow('AWS_BUCKET_NAME'),
+        Key: fileName,
+      };
+      await this.s3Client.send(new DeleteObjectCommand(params));
+      this.logger.log(`File ${fileName} deleted successfully`);
     } catch (err) {
       this.logger.error(err);
     }

@@ -3,12 +3,12 @@ import { AuthDataService } from './auth-data.service';
 import { UserDataService } from './../modules/users/user-data.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { UserAuth } from 'src/entities/auth/user-auth.entity';
+import { UserAuth } from 'src/entities/user-auth.entity';
 import { CreateUserDto } from 'src/modules/users/dto/create-user.dto';
 import { MockProxy, mock } from 'jest-mock-extended';
 import { MainLoggerService } from 'src/utils/main-logger';
 import { HttpException } from '@nestjs/common';
-import { User } from 'src/entities/users/user.entity';
+import { User } from 'src/entities/user.entity';
 
 jest.mock('bcrypt', () => ({
   compare: jest.fn(),

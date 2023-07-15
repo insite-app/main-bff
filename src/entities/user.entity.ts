@@ -4,8 +4,10 @@ import {
   PrimaryGeneratedColumn,
   OneToOne,
   JoinColumn,
+  UpdateDateColumn,
+  CreateDateColumn,
 } from 'typeorm';
-import { UserAuth } from '../auth/user-auth.entity';
+import { UserAuth } from './user-auth.entity';
 
 @Entity('users')
 export class User {
@@ -38,9 +40,9 @@ export class User {
   @Column({ nullable: false, default: 'defaultpic.jpeg' })
   avatar: string;
 
-  @Column({ default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn()
   readonly created_at: Date;
 
-  @Column({ default: () => 'CURRENT_TIMESTAMP' })
-  readonly updated_at: Date;
+  @UpdateDateColumn()
+  updated_at: Date;
 }

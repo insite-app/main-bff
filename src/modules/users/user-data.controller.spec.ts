@@ -5,7 +5,7 @@ import { AwsService } from '../aws/aws.service';
 import { mock, MockProxy } from 'jest-mock-extended';
 import { UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { User } from 'src/entities/users/user.entity';
+import { User } from 'src/entities/user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as stream from 'stream';
 
