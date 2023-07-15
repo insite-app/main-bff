@@ -14,8 +14,9 @@ import {
   ParseFilePipe,
   MaxFileSizeValidator,
   FileTypeValidator,
+  BadRequestException,
 } from '@nestjs/common';
-import { User } from 'src/entities/users/user.entity';
+import { User } from 'src/entities/user.entity';
 import { UserDataService } from 'src/modules/users/user-data.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { RolesGuard } from 'src/auth/guards/roles-guard';
@@ -25,6 +26,10 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import * as sharp from 'sharp';
 import * as crypto from 'crypto';
 import { AwsService } from '../aws/aws.service';
+
+function countNewlines(str) {
+  return (str.match(/\n/g) || []).length;
+}
 
 @Controller('users')
 export class UserDataController {
@@ -42,14 +47,14 @@ export class UserDataController {
 
   @Get(':username')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @SetMetadata('roles', ['student', 'admin'])
+  @SetMetadata('roles', ['student', 'admin', 'professional'])
   async findByUsername(@Param('username') username: string): Promise<User> {
     return this.userDataService.findByUsername(username);
   }
 
   @Get(':username/avatar')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @SetMetadata('roles', ['student', 'admin'])
+  @SetMetadata('roles', ['student', 'admin', 'professional'])
   async getAvatarByUsername(
     @Param('username') username: string,
   ): Promise<string> {
@@ -83,6 +88,10 @@ export class UserDataController {
       .resize({ height: 1920, width: 1080, fit: 'contain' })
       .toBuffer();
     const fileName = crypto.randomBytes(32).toString('hex');
+    const currentAvatar = await this.userDataService.getAvatarById(user.id);
+    if (currentAvatar && currentAvatar !== 'defaultpic.jpeg') {
+      await this.awsService.deleteFile(currentAvatar);
+    }
     await this.awsService.uploadFile(fileName, buffer);
     await this.userDataService.saveAvatar(user.id, { avatar: fileName });
   }
@@ -104,6 +113,9 @@ export class UserDataController {
       throw new UnauthorizedException(
         "You aren't authorized to update this user",
       );
+    }
+    if (countNewlines(updateUserDto.bio || '') > 10) {
+      throw new BadRequestException('Bio field contains too many lines');
     }
     console.log(updateUserDto);
     return this.userDataService.update(user.id, updateUserDto);

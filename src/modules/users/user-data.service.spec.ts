@@ -1,7 +1,7 @@
 import { UserDataService } from './user-data.service';
 import { Repository } from 'typeorm';
-import { User } from 'src/entities/users/user.entity';
-import { UserAuth } from 'src/entities/auth/user-auth.entity';
+import { User } from 'src/entities/user.entity';
+import { UserAuth } from 'src/entities/user-auth.entity';
 import { MainLoggerService } from 'src/utils/main-logger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';

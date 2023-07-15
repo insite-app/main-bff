@@ -1,5 +1,5 @@
 import { SearchService } from './search.service';
-import { User } from 'src/entities/users/user.entity';
+import { User } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
 import { MockProxy, mock } from 'jest-mock-extended';
 import { MainLoggerService } from 'src/utils/main-logger';

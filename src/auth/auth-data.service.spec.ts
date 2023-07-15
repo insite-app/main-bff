@@ -1,5 +1,5 @@
 import { Repository } from 'typeorm';
-import { UserAuth } from 'src/entities/auth/user-auth.entity';
+import { UserAuth } from 'src/entities/user-auth.entity';
 import { AuthDataService } from './auth-data.service';
 import { MainLoggerService } from 'src/utils/main-logger';
 import { CreateUserDto } from 'src/modules/users/dto/create-user.dto';

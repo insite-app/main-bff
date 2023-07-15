@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/entities/users/user.entity';
+import { User } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
 import { MainLoggerService } from 'src/utils/main-logger';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UserAuth } from 'src/entities/auth/user-auth.entity';
+import { UserAuth } from 'src/entities/user-auth.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdateAvatarDto } from './dto/update-avatar.dto';
 
@@ -104,6 +104,20 @@ export class UserDataService {
     }
     user = Object.assign(user, updateAvatarDto);
     return this.userRepository.save(user);
+  }
+
+  async getAvatarById(id: string): Promise<any> {
+    try {
+      const user = await this.userRepository
+        .createQueryBuilder('user')
+        .select('user.avatar')
+        .where('user.id = :id', { id })
+        .getOne();
+      return user.avatar;
+    } catch (error) {
+      this.logger.error(error);
+      throw error;
+    }
   }
 
   async getAvatarByUsername(username: string): Promise<any> {

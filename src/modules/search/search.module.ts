@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SearchController } from './search.controller';
 import { SearchService } from './search.service';
-import { User } from '../../entities/users/user.entity';
+import { User } from '../../entities/user.entity';
 import { MainLoggerService } from 'src/utils/main-logger';
 
 @Module({
