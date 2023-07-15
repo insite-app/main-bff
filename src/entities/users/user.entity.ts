@@ -35,7 +35,7 @@ export class User {
   @Column({ nullable: true })
   bio: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: false, default: 'defaultpic.jpeg' })
   avatar: string;
 
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
