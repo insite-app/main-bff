@@ -117,7 +117,6 @@ export class UserDataController {
     if (countNewlines(updateUserDto.bio || '') > 10) {
       throw new BadRequestException('Bio field contains too many lines');
     }
-    console.log(updateUserDto);
     return this.userDataService.update(user.id, updateUserDto);
   }
 }
