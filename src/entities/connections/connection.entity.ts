@@ -11,10 +11,10 @@ export class Connection {
   id: string;
 
   @Column({ type: 'uuid' })
-  userId: string;
+  user1Id: string;
 
   @Column({ type: 'uuid' })
-  friendId: string;
+  user2Id: string;
 
   @CreateDateColumn()
   createdAt: Date;

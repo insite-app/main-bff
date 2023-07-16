@@ -71,6 +71,20 @@ export class UserDataService {
     }
   }
 
+  async getIdByUsername(username: string): Promise<string> {
+    try {
+      const user = await this.userAuthRepository
+        .createQueryBuilder('userAuth')
+        .select('userAuth.id')
+        .where('userAuth.username = :username', { username })
+        .getOne();
+      return user.id;
+    } catch (error) {
+      this.logger.error(error);
+      throw error;
+    }
+  }
+
   async create(createUserDto: CreateUserDto): Promise<User> {
     // Implement the logic to save the user to your data store
     const newUser = await this.userRepository.create(createUserDto);

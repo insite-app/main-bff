@@ -7,15 +7,15 @@ import {
 } from 'typeorm';
 
 @Entity('request-rejects')
-export class ConnectionBlock {
+export class RequestReject {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ type: 'uuid' })
-  requesterId: string;
+  senderId: string;
 
   @Column({ type: 'uuid' })
-  recipientId: string;
+  receiverId: string;
 
   @Column({ type: 'integer', default: 0 })
   rejectedTimes: number;
