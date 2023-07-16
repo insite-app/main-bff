@@ -114,7 +114,7 @@ export class UserDataController {
         "You aren't authorized to update this user",
       );
     }
-    if (countNewlines(updateUserDto.bio || '') > 10) {
+    if (countNewlines(updateUserDto.bio || '') > 8) {
       throw new BadRequestException('Bio field contains too many lines');
     }
     return this.userDataService.update(user.id, updateUserDto);

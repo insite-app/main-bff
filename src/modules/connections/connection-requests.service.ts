@@ -159,16 +159,16 @@ export class ConnectionRequestsService {
     }
   }
 
-  async getAllReceivedRequestsByUserId(
-    userId: string,
-  ): Promise<ConnectionRequest[]> {
+  async getAllReceivedRequestsByUserId(userId: string): Promise<any> {
     try {
-      return this.requestRepository.find({
-        where: { receiverId: userId },
+      const requests = await this.requestRepository.find({
+        where: { receiverId: userId, isRejected: false },
+        relations: ['sender'],
       });
+
+      return requests;
     } catch (error) {
-      this.logger.error(error);
-      throw error;
+      throw new Error(`Failed to get connection requests: ${error.message}`);
     }
   }
 
