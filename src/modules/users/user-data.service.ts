@@ -27,21 +27,9 @@ export class UserDataService {
     }
   }
 
-  async findAllIncludingUsername(): Promise<User[]> {
-    try {
-      return this.userRepository
-        .createQueryBuilder('user')
-        .leftJoinAndSelect('user.userAuth', 'userAuth')
-        .getMany();
-    } catch (error) {
-      this.logger.error(error);
-      throw error;
-    }
-  }
-
   async findUserRoleById(id: string): Promise<string> {
     try {
-      const user = await this.userAuthRepository.findOne({ where: { id } });
+      const user = await this.userRepository.findOne({ where: { id } });
       return user.role;
     } catch (error) {
       this.logger.error(error);
@@ -60,24 +48,17 @@ export class UserDataService {
 
   async findByUsername(username: string): Promise<User> {
     try {
-      return this.userRepository
-        .createQueryBuilder('user')
-        .leftJoinAndSelect('user.userAuth', 'userAuth')
-        .where('userAuth.username = :username', { username })
-        .getOne();
+      return this.userRepository.findOne({ where: { username } });
     } catch (error) {
       this.logger.error(error);
-      throw error;
     }
   }
 
   async getIdByUsername(username: string): Promise<string> {
     try {
-      const user = await this.userAuthRepository
-        .createQueryBuilder('userAuth')
-        .select('userAuth.id')
-        .where('userAuth.username = :username', { username })
-        .getOne();
+      const user = await this.userRepository.findOne({
+        where: { username },
+      });
       return user.id;
     } catch (error) {
       this.logger.error(error);
@@ -99,6 +80,14 @@ export class UserDataService {
     });
     if (userWithEmail && userWithEmail.id !== id) {
       throw new HttpException('Email already exists', HttpStatus.CONFLICT);
+    }
+    // Error if updated username already exists
+    const { username } = updateUserDto;
+    const userWithUsername = await this.userRepository.findOne({
+      where: { username },
+    });
+    if (userWithUsername && userWithUsername.id !== id) {
+      throw new HttpException('Username already exists', HttpStatus.CONFLICT);
     }
     let user = await this.findById(id);
     if (!user) {
@@ -139,8 +128,7 @@ export class UserDataService {
       const user = await this.userRepository
         .createQueryBuilder('user')
         .select('user.avatar')
-        .leftJoin('user.userAuth', 'userAuth')
-        .where('userAuth.username = :username', { username })
+        .where('user.username = :username', { username })
         .getOne();
       return user.avatar;
     } catch (error) {

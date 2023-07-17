@@ -42,7 +42,7 @@ export class UserDataController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @SetMetadata('roles', ['admin'])
   async findAll(): Promise<User[]> {
-    return this.userDataService.findAllIncludingUsername();
+    return this.userDataService.findAll();
   }
 
   @Get(':username')

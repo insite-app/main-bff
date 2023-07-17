@@ -56,14 +56,14 @@ describe('UserDataService', () => {
   });
   describe('#findUserRoleById', () => {
     it('should return a user role', async () => {
-      const userAuth = new UserAuth();
-      userAuth.role = 'test_role';
-      mockUserAuthRepository.findOne.mockResolvedValue(userAuth);
+      const user = new User();
+      user.role = 'test_role';
+      mockUserRepository.findOne.mockResolvedValue(user);
 
       const result = await service.findUserRoleById('test_id');
 
       expect(result).toBe('test_role');
-      expect(mockUserAuthRepository.findOne).toHaveBeenCalledTimes(1);
+      expect(mockUserRepository.findOne).toHaveBeenCalledTimes(1);
     });
     it('should log an error if one occurs', async () => {
       mockUserAuthRepository.findOne.mockRejectedValue(new Error('test error'));

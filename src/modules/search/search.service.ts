@@ -19,10 +19,8 @@ export class SearchService {
     try {
       const [data, total] = await this.userRepository
         .createQueryBuilder('user')
-        .innerJoin('user.userAuth', 'userAuth')
-        .addSelect('userAuth.username')
         .where(
-          'user.name ILIKE :searchString OR user.organization_name ILIKE :searchString OR userAuth.username ILIKE :searchString',
+          'user.name ILIKE :searchString OR user.organization_name ILIKE :searchString OR user.username ILIKE :searchString',
           {
             searchString: `%${searchString}%`,
           },

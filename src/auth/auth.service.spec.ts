@@ -36,14 +36,27 @@ describe('AuthService', () => {
       mockLogger,
     );
     testUserAuth = {
-      username: 'test',
       password_hash: 'hashed_password',
       id: 'test_id',
-      role: 'test_role',
-      user: null,
+      user: {
+        username: 'test',
+        role: 'test_role',
+        id: 'test_id',
+        email: 'test_email',
+        name: 'test_name',
+        created_at: new Date(),
+        phone: 'test_phone',
+        organization_name: 'test_organization_name',
+        bio: 'test_bio',
+        avatar: 'test_avatar',
+        updated_at: new Date(),
+        userAuth: null,
+      },
       created_at: new Date(),
     };
     testUser = {
+      username: 'test',
+      role: 'test_role',
       id: 'test_id',
       email: 'test_email',
       name: 'test_name',

@@ -14,14 +14,6 @@ export class AuthDataService {
     private readonly logger: MainLoggerService,
   ) {}
 
-  async findUserByUsername(username: string): Promise<UserAuth> {
-    try {
-      return this.userAuthRepository.findOne({ where: { username } });
-    } catch (error) {
-      this.logger.error(error);
-    }
-  }
-
   async createUserAuth(createUserDto: CreateUserDto): Promise<UserAuth> {
     try {
       const { password, ...rest } = createUserDto;
@@ -34,6 +26,19 @@ export class AuthDataService {
       });
 
       return userAuth;
+    } catch (error) {
+      this.logger.error(error);
+    }
+  }
+
+  async findUserByUsername(username: string): Promise<UserAuth> {
+    try {
+      const user = await this.userAuthRepository
+        .createQueryBuilder('userAuth')
+        .leftJoinAndSelect('userAuth.user', 'user')
+        .where('user.username = :username', { username })
+        .getOne();
+      return user;
     } catch (error) {
       this.logger.error(error);
     }

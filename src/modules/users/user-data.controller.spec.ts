@@ -57,6 +57,8 @@ describe('UserDataController', () => {
     };
     expectedUser = {
       id: expect.any(String),
+      username: createUserDto.username,
+      role: createUserDto.role,
       email: createUserDto.email,
       userAuth: expect.any(Object),
       organization_name: expect.any(String),
@@ -92,6 +94,8 @@ describe('UserDataController', () => {
       };
       const expectedUpdatedUser: User = {
         id: expect.any(String),
+        username: 'test-user',
+        role: 'test-role',
         email: 'test-email',
         userAuth: expect.any(Object),
         organization_name: 'Test Organization',
@@ -134,20 +138,16 @@ describe('UserDataController', () => {
   });
 
   describe('#findAll', () => {
-    it('should call UserDataService.findAllIncludingUsername and return the result', async () => {
+    it('should call UserDataService.findAll and return the result', async () => {
       const expectedUsers: User[] = [
         /* populate with test data */
       ];
 
-      mockUserDataService.findAllIncludingUsername.mockResolvedValue(
-        expectedUsers,
-      );
+      mockUserDataService.findAll.mockResolvedValue(expectedUsers);
 
       const result = await controller.findAll();
 
-      expect(
-        mockUserDataService.findAllIncludingUsername,
-      ).toHaveBeenCalledTimes(1);
+      expect(mockUserDataService.findAll).toHaveBeenCalledTimes(1);
       expect(result).toBe(expectedUsers);
     });
   });

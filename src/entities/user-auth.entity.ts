@@ -19,12 +19,6 @@ export class UserAuth {
   user: User;
 
   @Column({ nullable: false })
-  role: string;
-
-  @Column({ nullable: false, unique: true })
-  username: string;
-
-  @Column({ nullable: false })
   password_hash: string;
 
   @CreateDateColumn()

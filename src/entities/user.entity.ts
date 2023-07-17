@@ -22,11 +22,17 @@ export class User {
   @JoinColumn({ name: 'id' })
   userAuth: UserAuth;
 
-  @Column({ nullable: true })
-  organization_name: string;
+  @Column({ nullable: false, unique: true })
+  username: string;
+
+  @Column({ nullable: false })
+  role: string;
 
   @Column({ nullable: true })
   name: string;
+
+  @Column({ nullable: true })
+  organization_name: string;
 
   @Column({ nullable: false, unique: true })
   email: string;
