@@ -172,24 +172,16 @@ export class ConnectionRequestsService {
     }
   }
 
-  async checkIfRequestExists(
-    senderId: string,
-    receiverId: string,
-  ): Promise<boolean> {
+  async getRequestId(senderId: string, receiverId: string): Promise<string> {
     try {
       const request = await this.requestRepository.findOne({
-        where: [
-          { senderId, receiverId },
-          { senderId: receiverId, receiverId: senderId },
-        ],
+        where: [{ senderId, receiverId }],
       });
-      if (request) {
-        return true;
-      } else {
-        return false;
+      if (!request) {
+        return null;
       }
+      return request.id;
     } catch (error) {
-      this.logger.error(error);
       throw error;
     }
   }

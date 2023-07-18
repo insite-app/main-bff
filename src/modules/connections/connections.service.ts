@@ -16,18 +16,38 @@ export class ConnectionsService {
     private readonly requestRejectRepository: Repository<RequestReject>,
     @InjectRepository(Connection)
     private readonly connectionRepository: Repository<Connection>,
-    @InjectRepository(ConnectionRequest)
-    private readonly requestRepository: Repository<ConnectionRequest>,
     @InjectRepository(ConnectionBlock)
     private readonly blockRepository: Repository<ConnectionBlock>,
     private readonly userDataService: UserDataService,
     private readonly logger: MainLoggerService,
   ) {}
 
-  async getAllConnectionsByUserId(userId: string): Promise<Connection[]> {
+  async getAllConnectionsByUserId(userId: string): Promise<any[]> {
     try {
-      return this.connectionRepository.find({
-        where: [{ user1Id: userId }, { user2Id: userId }],
+      const connections = await this.connectionRepository
+        .createQueryBuilder('connection')
+        .leftJoinAndSelect('connection.user1', 'user1')
+        .leftJoinAndSelect('connection.user2', 'user2')
+        .where('connection.user1Id = :userId', { userId })
+        .orWhere('connection.user2Id = :userId', { userId })
+        .getMany();
+
+      return connections.map((connection) => {
+        let currentUser, otherUser;
+        if (connection.user1Id === userId) {
+          currentUser = connection.user1;
+          otherUser = connection.user2;
+        } else {
+          currentUser = connection.user2;
+          otherUser = connection.user1;
+        }
+
+        const { user1, user2, ...rest } = connection;
+        return {
+          ...rest,
+          currentUser: currentUser,
+          otherUser: otherUser,
+        };
       });
     } catch (error) {
       this.logger.error(error);
@@ -74,6 +94,40 @@ export class ConnectionsService {
       }
       await this.removeConnectionByUserIds(blockerId, blockedId);
       await this.blockRepository.save(blockUserDto);
+    } catch (error) {
+      this.logger.error(error);
+      throw error;
+    }
+  }
+
+  async unblockUser(blockUserDto: BlockUserDto): Promise<void> {
+    try {
+      const { blockerId, blockedId } = blockUserDto;
+      // Check if users exist
+      const user1 = await this.userDataService.findById(blockerId);
+      const user2 = await this.userDataService.findById(blockedId);
+      if (!user1 || !user2) {
+        throw new Error('User not found');
+      }
+      await this.blockRepository.delete(blockUserDto);
+    } catch (error) {
+      this.logger.error(error);
+      throw error;
+    }
+  }
+
+  async checkIfConnectionExists(
+    user1Id: string,
+    user2Id: string,
+  ): Promise<boolean> {
+    try {
+      const connection = await this.connectionRepository.findOne({
+        where: [
+          { user1Id, user2Id },
+          { user1Id: user2Id, user2Id: user1Id },
+        ],
+      });
+      return !!connection;
     } catch (error) {
       this.logger.error(error);
       throw error;
